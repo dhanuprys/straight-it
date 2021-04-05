@@ -76,3 +76,4 @@ class JsonStorage(BaseModel):
         
         return True
 
+jsonstorage = JsonStorage()
