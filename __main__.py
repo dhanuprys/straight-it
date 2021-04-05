@@ -1,7 +1,8 @@
 import os
-from functools import wraps
-import middleware
 from flask import Flask, request, redirect, g
+import middleware
+import response_builder
+from model.jsonstorage import jsonstorage
 
 app_key = os.environ.get("STRAIGHT_API_KEY")
 director_driver = os.environ.get("STRAIGHT_DIRECTOR_DRIVER", "http")
@@ -33,7 +34,20 @@ def links():
     if request.method == "GET":
         # uri: gateway
         # return: success, target
-        return { "success": True }
+        
+        gateway = request.args.get("gateway")
+
+        if not gateway:
+            return response_builder.fail("read", "No gateway specified")
+
+        gateway_target = jsonstorage.get_target(gateway)
+
+        if not gateway_target:
+            return response_builder.fail("read", "Gateway not found")
+
+        return response_builder.success("read", {
+            "target": gateway_target
+        })
     elif request.method == "POST":
         # body: target
         # return: success, gateway, url
