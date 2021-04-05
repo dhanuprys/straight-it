@@ -5,13 +5,13 @@ import response_builder
 from model.jsonstorage import jsonstorage
 
 app_key = os.environ.get("STRAIGHT_API_KEY")
-director_driver = os.environ.get("STRAIGHT_DIRECTOR_DRIVER", "http")
+http_referrer = os.environ.get("STRAIGHT_HTTP_REFERRER", "http")
 app_port = int(os.environ.get("PORT", 8080))
 flask_app = Flask(__name__)
 
 environment_vars = {
     "app_key": app_key,
-    "director_driver": director_driver
+    "http_referrer": http_referrer
 }
 
 def set_environment(env):
@@ -68,8 +68,8 @@ if __name__ == "__main__":
             "You must provide a key for application API access"
         )
 
-    if not director_driver == "http" and \
-        not director_driver == "javascript":
+    if not http_referrer == "http" and \
+        not http_referrer == "javascript":
         raise ValueError("Use http or javascript to application director")
 
     flask_app.run(
