@@ -1,9 +1,10 @@
 # Straight.it
 Developed with flasks to facilitate and speed up the development of link shortener applications.
+![logo](https://raw.githubusercontent.com/dhanuprys/arts/master/straight-it-logo.png)
 
 ## Requirements
 - Python 3 or higher
-- Pip 3 or higher
+- PIP 3 or higher
 - Several python libraries, will be explained later in the installation section
 
 ## Step by Step to Install
