@@ -45,7 +45,7 @@ $ STRAIGHT_API_KEY=<yourprivatekey> ...
 $ STRAIGHT_HTTP_REFERRER=<drivertype> ...
 ```
 
-HTTP driver type list:
+#### HTTP driver type list:
 - http **(default)**
 - javascript / js
 
