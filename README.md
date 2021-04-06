@@ -89,10 +89,8 @@ HTTP GET /api/v1/links?key=<yourapikey>
 ```
 
 ### Get Specific Data (read spesific)
-> On development
-
 ```
-HTTP GET /api/v1/links?key=<yourapikey>
+HTTP GET /api/v1/links?key=<yourapikey>&gateway=<yourgateway>
 ```
 
 ### Update Existing Data (update)
