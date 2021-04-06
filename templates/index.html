@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Straight.it</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: rgb(136, 233, 152);
+            color: rgb(255, 255, 255);
+        }
+
+        h1 {
+            font-size: 4rem;
+        }
+
+        .center-box {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .badge-group {
+            width: 100%;
+            color: #4b4545;
+        }
+
+        .badge-group .badge-item {
+            padding: 20px;
+            margin: 10px;
+            background-color: #fff;
+            border-top-left-radius: 26px;
+            border-bottom-right-radius: 26px;
+            border-top-right-radius: 6px;
+            border-bottom-left-radius: 6px;
+            text-align: center;
+            min-width: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .badge-group .badge-item:hover {
+            transition: 0.5s;
+            background-color: rgb(199, 236, 199);
+        }
+    </style>
+</head>
+<body>
+    <div class="center-box">
+        <h1 style="cursor: default;">STRAIGHT.IT</h1>
+        <div class="badge-group">
+            <div class="badge-item" onclick="window.location = 'https://github.com/dhanuprys/straight-it';">
+                github
+            </div>
+        </div>
+    </div>
+</body>
+</html>
