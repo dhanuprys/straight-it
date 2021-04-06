@@ -11,11 +11,13 @@ import generator
 app_key = os.environ.get("STRAIGHT_API_KEY")
 http_referrer = os.environ.get("STRAIGHT_HTTP_REFERRER", "http")
 app_port = int(os.environ.get("PORT", 8080))
+current_host = os.environ.get("CURRENT_HOST", "http://localhost" + str(app_port)) + "/r/"
 flask_app = Flask(__name__)
 
 environment_vars = {
     "app_key": app_key,
-    "http_referrer": http_referrer
+    "http_referrer": http_referrer,
+    "current_host": current_host
 }
 
 def set_environment(env):
@@ -77,16 +79,16 @@ def links():
             "target": gateway_target
         })
     elif request.method == "POST":
-        # body: target
+        # body: target, gateway (custom gateway)
         # return: success, gateway, url
         link_target = request_payload.get("target")
         
         if not link_target:
             return response_builder.fail("create", "'target' is not available.")
         
-        gateway = generator.generate_id()
+        gateway = request_payload.get("gateway") or generator.generate_id()
 
-        if jsonstorage.store(gateway, link_target):
+        if jsonstorage.store(gateway, link_target, throw_exception=False):
             return response_builder.success("create", {
                 "gateway": gateway,
                 "url": generator.shorted_url(gateway)
@@ -96,12 +98,40 @@ def links():
     elif request.method == "PUT" or request.method == "UPDATE":
         # body: gateway, target
         # return success, gateway, url
-        pass
+
+        gateway = request_payload.get("gateway")
+        new_target = request_payload.get("target")
+        
+        if not gateway or not new_target:
+            return response_builder.fail(
+                "update", 
+                "'gateway' or 'target' is not avalaible on request body"
+            )
+
+        if jsonstorage.update(gateway, new_target):
+            return response_builder.success("update", {
+                "gateway": gateway,
+                "target": new_target
+            })
+
+        return response_builder.fail("update", "Failed to update links")
     elif request.method == "DELETE":
         # body: gateway
-        # return: success
-        pass
+        # return: success, gateway
+        gateway = request_payload.get("gateway")
 
+        if not gateway:
+            return response_builder.fail(
+                "delete", 
+                "'gateway' not avalaible on request body"
+            )
+        
+        if jsonstorage.delete(gateway, throw_exception=False):
+            return response_builder.success("delete", {
+                "gateway": gateway
+            })
+        
+        return response_builder.fail("delete", "Failed to delete selected gateway")
 
 if __name__ == "__main__":
     if app_key == None:
