@@ -46,8 +46,11 @@ $ STRAIGHT_HTTP_REFERRER=<drivertype> ...
 ```
 
 HTTP driver type list:
-- http
+- http **(default)**
 - javascript / js
+
+If you choose *http*, the server will provide a response in the form of a status code which will redirect to the intended link. 
+But if you use *javascript* / *js* then the server will display an html page containing javascript code which will redirect to the destination page
 
 ### Port Settings (default: 8080)
 ```bash
