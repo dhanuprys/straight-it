@@ -101,6 +101,7 @@ HTTP PUT /api/v1/links?key=<yourapikey>
   "target": "<your new target>" // required
 }
 ```
+> You can use PUT or UPDATE as the request method
 
 ### Delete Existing Data (delete) :heavy_minus_sign:
 ```
