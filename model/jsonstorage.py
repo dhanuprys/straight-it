@@ -8,7 +8,7 @@ class JsonStorage(BaseModel):
             path.dirname(
                 path.realpath(__file__)
             ), 
-            "db.json"
+            "__storage__.json"
         )
         
         if not path.isfile(real_storage_path):
