@@ -1,7 +1,8 @@
-import time
+import shortuuid
+from flask import g
 
 def generate_id():
-    return str(time.time())[4:10].replace(".", "")
+    return shortuuid.ShortUUID().random(length=18)
 
 def shorted_url(gateway):
-    return "http://me.com/r/{}".format(gateway)
+    return g.get("current_host") + gateway
