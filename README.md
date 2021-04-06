@@ -1,6 +1,6 @@
 # Straight.it
-Developed with flasks to facilitate and speed up the development of link shortener applications.
 ![logo](https://raw.githubusercontent.com/dhanuprys/arts/master/straight-it-logo.png)
+Developed with flasks to facilitate and speed up the development of link shortener applications.
 
 ## Requirements
 - Python 3 or higher
