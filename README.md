@@ -102,7 +102,7 @@ HTTP PUT /api/v1/links?key=<yourapikey>
 }
 ```
 
-### Delete Existing Data 
+### Delete Existing Data (delete)
 ```
 HTTP DELETE /api/v1/links?key=<yourapikey>
 {
