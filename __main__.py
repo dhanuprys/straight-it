@@ -1,8 +1,12 @@
 import os
-from flask import Flask, request, redirect, g
+from flask import Flask, request, redirect, g, render_template
 import middleware
 import response_builder
 from model.jsonstorage import jsonstorage
+import orjson
+import generator
+
+# FIXME: Add response code
 
 app_key = os.environ.get("STRAIGHT_API_KEY")
 http_referrer = os.environ.get("STRAIGHT_HTTP_REFERRER", "http")
@@ -27,10 +31,34 @@ flask_app.before_request(middleware.api_key_filter)
 
 @flask_app.route("/")
 def index():
-    return "STRAIGHT.IT"
+    return render_template("index.html")
 
-@flask_app.route("/api/v1/links")
+@flask_app.route("/r/<gateway>")
+def redirect_user(gateway):
+    target = jsonstorage.get_target(gateway)
+
+    if not target:
+        return "404 Not Found"
+
+    if g.get("http_referrer") in ["javascript", "js"]:
+        return render_template("js_director.html", target=target)
+    elif g.get("http_referrer") == "http":
+        return redirect(target, code=301)
+
+@flask_app.route("/api/v1/links", methods=[
+    "GET", "POST", "UPDATE", "PUT", "DELETE"
+])
 def links():
+    request_payload = None
+
+    try:
+        request_payload = orjson.loads(request.get_data())
+    except:
+        if request.method in ["POST", "UPDATE", "PUT", "DELETE"]:
+            return response_builder.fail("unknown:middleware", "Request body is not JSON")
+
+        request_payload = {}
+
     if request.method == "GET":
         # uri: gateway
         # return: success, target
@@ -51,7 +79,20 @@ def links():
     elif request.method == "POST":
         # body: target
         # return: success, gateway, url
-        pass
+        link_target = request_payload.get("target")
+        
+        if not link_target:
+            return response_builder.fail("create", "'target' is not available.")
+        
+        gateway = generator.generate_id()
+
+        if jsonstorage.store(gateway, link_target):
+            return response_builder.success("create", {
+                "gateway": gateway,
+                "url": generator.shorted_url(gateway)
+            })
+
+        return response_builder.fail("create", "Failed to store link target.")
     elif request.method == "PUT" or request.method == "UPDATE":
         # body: gateway, target
         # return success, gateway, url
@@ -68,11 +109,11 @@ if __name__ == "__main__":
             "You must provide a key for application API access"
         )
 
-    if not http_referrer == "http" and \
-        not http_referrer == "javascript":
+    if not http_referrer in ["javascript", "js", "http"]:
         raise ValueError("Use http or javascript to application director")
 
     flask_app.run(
         host="0.0.0.0", 
-        port=app_port
+        port=app_port,
+        debug=True
     )
