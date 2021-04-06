@@ -16,34 +16,43 @@ class JsonStorage(BaseModel):
                 storage.write("{}")
 
         self.real_storage_path = real_storage_path
-    def store(self, gateway, target):
+    def store(self, gateway, target, throw_exception=True):
         collection = self.__read_storage()
         collection_key_check = collection.get(gateway)
         
         if collection_key_check:
-            raise KeyError("Storage key is already present")
+            if throw_exception:
+                raise KeyError("Storage key is already present")
+            
+            return False
 
         # FIXME: Add url validator
         collection[gateway] = target
 
         return self.__put_storage(collection)
-    def update(self, gateway, new_target):
+    def update(self, gateway, new_target, throw_exception=True):
         collection = self.__read_storage()
         collection_key_check = collection.get(gateway)
 
         if not collection_key_check:
-            raise KeyError("Key is not avalaible")
+            if throw_exception:
+                raise KeyError("Key is not avalaible")
+            
+            return False
 
         # FIXME: Add URL validator
         collection[gateway] = new_target
 
         return self.__put_storage(collection)
-    def delete(self, gateway):
+    def delete(self, gateway, throw_exception=True):
         collection = self.__read_storage()
         collection_key_check = collection.get(gateway)
 
         if not collection_key_check:
-            raise KeyError("Key is not avalaible")
+            if throw_exception:
+                raise KeyError("Key is not avalaible")
+            
+            return False
 
         del collection[gateway]
 
